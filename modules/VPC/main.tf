@@ -79,7 +79,7 @@ module "nat" {
 
   public_subnet_id = module.subnets.public_subnet_ids["pub1a"]
 
-  nat_name = "mlops-nat-gateway"
+  nat_name       = "mlops-nat-gateway"
   igw_dependency = module.igw.igw_id
 }
 
