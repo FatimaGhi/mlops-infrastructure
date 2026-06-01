@@ -12,3 +12,8 @@ module "eks" {
   private_subnet_ids = values(module.vpc.private_subnets)
   depends_on         = [module.vpc]
 }
+
+module "s3" {
+  source      = "./modules/S3"
+  bucket_name = "mlops-mlflow-artifacts"
+}
