@@ -12,6 +12,7 @@ resource "aws_subnet" "public" {
   tags = {
     Name                     = each.value.name
     "kubernetes.io/role/elb" = "1"
+    "kubernetes.io/cluster/mlops-cluster" = "shared" 
   }
 }
 
@@ -29,5 +30,6 @@ resource "aws_subnet" "private" {
   tags = {
     Name                              = each.value.name
     "kubernetes.io/role/internal-elb" = "1"
+    "kubernetes.io/cluster/mlops-cluster" = "shared"
   }
 }
