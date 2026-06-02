@@ -1,0 +1,63 @@
+# EBS CSI DRIVER
+resource "helm_release" "ebs_csi_driver" {
+  name       = "aws-ebs-csi-driver"
+  repository = "https://kubernetes-sigs.github.io/aws-ebs-csi-driver"
+  chart      = "aws-ebs-csi-driver"
+  namespace  = "kube-system"
+  version    = "2.28.0"
+
+  values = [
+    yamlencode({
+      defaultStorageClass = {
+        enabled = true
+      }
+    })
+  ]
+}
+
+# NGINX INGRESS
+resource "helm_release" "nginx_ingress" {
+  name             = "nginx-ingress"
+  repository       = "https://kubernetes.github.io/ingress-nginx"
+  chart            = "ingress-nginx"
+  namespace        = "ingress-nginx"
+  version          = "4.9.0"
+  create_namespace = true
+
+  values = [
+    yamlencode({
+      controller = {
+        service = {
+          type = "LoadBalancer"
+          annotations = {
+            "service.beta.kubernetes.io/aws-load-balancer-type" = "nlb"
+          }
+        }
+      }
+    })
+  ]
+
+  depends_on = [helm_release.ebs_csi_driver]
+}
+
+# ARGOCD
+resource "helm_release" "argocd" {
+  name             = "argocd"
+  repository       = "https://argoproj.github.io/argo-helm"
+  chart            = "argo-cd"
+  namespace        = "argocd"
+  version          = "6.7.0"
+  create_namespace = true
+
+  values = [
+    yamlencode({
+      server = {
+        service = {
+          type = "ClusterIP"
+        }
+      }
+    })
+  ]
+
+  depends_on = [helm_release.nginx_ingress]
+}
