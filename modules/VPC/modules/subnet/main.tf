@@ -10,9 +10,9 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name                     = each.value.name
-    "kubernetes.io/role/elb" = "1"
-    "kubernetes.io/cluster/mlops-cluster" = "shared" 
+    Name                                  = each.value.name
+    "kubernetes.io/role/elb"              = "1"
+    "kubernetes.io/cluster/mlops-cluster" = "shared"
   }
 }
 
@@ -28,8 +28,8 @@ resource "aws_subnet" "private" {
   availability_zone = each.value.az
 
   tags = {
-    Name                              = each.value.name
-    "kubernetes.io/role/internal-elb" = "1"
+    Name                                  = each.value.name
+    "kubernetes.io/role/internal-elb"     = "1"
     "kubernetes.io/cluster/mlops-cluster" = "shared"
   }
 }
