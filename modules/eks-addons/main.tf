@@ -61,3 +61,39 @@ resource "helm_release" "argocd" {
 
   depends_on = [helm_release.nginx_ingress]
 }
+
+# ARGOCD BOOTSTRAP (APP OF APPS)
+resource "helm_release" "argocd_bootstrap" {
+  name       = "argocd-apps"
+  repository = "https://argoproj.github.io/argo-helm"
+  chart      = "argocd-apps"
+  namespace  = "argocd"
+  version    = "1.4.1"
+
+  values = [
+    yamlencode({
+      applications = [{
+        name      = "app-of-apps"
+        namespace = "argocd"
+        project   = "default"
+        source = {
+          repoURL        = "https://github.com/FatimaGhi/mlops-gitops"
+          targetRevision = "main"
+          path           = "bootstrap"
+        }
+        destination = {
+          server    = "https://kubernetes.default.svc"
+          namespace = "argocd"
+        }
+        syncPolicy = {
+          automated = {
+            prune    = true
+            selfHeal = true
+          }
+        }
+      }]
+    })
+  ]
+
+  depends_on = [helm_release.argocd]
+}
