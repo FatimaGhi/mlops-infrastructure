@@ -15,5 +15,16 @@ module "eks" {
 
 module "s3" {
   source      = "./modules/S3"
-  bucket_name = "mlops-mlflow-artifacts"
+  bucket_name = "mlops-mlflow-artifacts-709598629349"
+}
+module "ecr" {
+  source       = "./modules/ecr"
+  repositories = ["model-serving", "airflow", "mlflow"]
+}
+module "eks_addons" {
+  source           = "./modules/eks-addons"
+  cluster_name     = module.eks.cluster_name
+  cluster_endpoint = module.eks.cluster_endpoint
+  cluster_ca       = module.eks.cluster_ca
+  depends_on       = [module.eks]
 }
