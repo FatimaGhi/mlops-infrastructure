@@ -9,6 +9,6 @@ variable "private_subnet_ids" {
 
 variable "cluster_sg_id" {}
 variable "my_ip" {
-  type = string
-  default = "160.90.62.211/32" # replace with my ip address for security for accessing the cluster endpoint 
+  type    = string
+  default = "0.0.0.0/0" # replace with my ip address for security for accessing the cluster endpoint 
 }

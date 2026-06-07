@@ -11,7 +11,7 @@ resource "aws_eks_cluster" "this" {
     endpoint_private_access = true
     endpoint_public_access  = true
 
-    public_access_cidrs          = ["160.90.62.211/32"] # replace with my ip address for security for accessing the cluster endpoint
+    public_access_cidrs = ["160.90.62.211/32"] # replace with my ip address for security for accessing the cluster endpoint
   }
 
   depends_on = []
