@@ -18,8 +18,8 @@ module "s3" {
   bucket_name = "mlops-mlflow-artifacts-709598629349"
 }
 module "ecr" {
-  source       = "./modules/ecr"
-  repositories = ["model-serving", "airflow", "mlflow"]
+  source       = "./modules/ECR"
+  repositories = ["model-serving", "mlflow"]
 }
 module "eks_addons" {
   source           = "./modules/eks-addons"
