@@ -98,6 +98,29 @@ resource "helm_release" "argocd_bootstrap" {
   depends_on = [helm_release.argocd]
 }
 
+
+# IAM Role — MLflow ServiceAccount
+resource "aws_iam_role" "mlflow" {
+  name = "mlflow-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Principal = {
+        Federated = "arn:aws:iam::709598629349:oidc-provider/${var.oidc_provider}"
+      }
+      Action = "sts:AssumeRoleWithWebIdentity"
+      Condition = {
+        StringEquals = {
+          "${var.oidc_provider}:sub" = "system:serviceaccount:mlflow:mlflow"
+          "${var.oidc_provider}:aud" = "sts.amazonaws.com"
+        }
+      }
+    }]
+  })
+}
+
 resource "aws_iam_policy" "mlflow_s3" {
   name = "mlflow-s3-policy"
 
@@ -118,4 +141,19 @@ resource "aws_iam_policy" "mlflow_s3" {
       ]
     }]
   })
+}
+resource "aws_iam_role_policy_attachment" "mlflow_s3" {
+  role       = aws_iam_role.mlflow.name
+  policy_arn = aws_iam_policy.mlflow_s3.arn
+}
+
+resource "kubernetes_service_account" "mlflow" {
+  metadata {
+    name      = "mlflow"
+    namespace = "mlflow"
+    annotations = {
+      "eks.amazonaws.com/role-arn" = aws_iam_role.mlflow.arn
+    }
+  }
+  depends_on = [helm_release.argocd]
 }
