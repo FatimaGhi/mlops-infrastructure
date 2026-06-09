@@ -9,3 +9,10 @@ output "cluster_endpoint" {
 output "cluster_ca" {
   value = module.eks_cluster.cluster_ca
 }
+output "oidc_provider" {
+  value = replace(
+    aws_eks_cluster.this.identity[0].oidc[0].issuer,
+    "https://",
+    ""
+  )
+}

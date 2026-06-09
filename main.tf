@@ -26,5 +26,6 @@ module "eks_addons" {
   cluster_name     = module.eks.cluster_name
   cluster_endpoint = module.eks.cluster_endpoint
   cluster_ca       = module.eks.cluster_ca
+  oidc_provider    = module.eks.oidc_provider
   depends_on       = [module.eks]
 }

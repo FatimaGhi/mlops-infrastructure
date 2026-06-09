@@ -97,3 +97,25 @@ resource "helm_release" "argocd_bootstrap" {
 
   depends_on = [helm_release.argocd]
 }
+
+resource "aws_iam_policy" "mlflow_s3" {
+  name = "mlflow-s3-policy"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Action = [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject",
+        "s3:ListBucket"
+      ]
+      Resource = [
+        "arn:aws:iam::${var.aws_account_id}:*",
+        "arn:aws:s3:::mlops-mlflow-artifacts-709598629349",
+        "arn:aws:s3:::mlops-mlflow-artifacts-709598629349/*"
+      ]
+    }]
+  })
+}
