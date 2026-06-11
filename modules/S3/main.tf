@@ -1,5 +1,9 @@
 resource "aws_s3_bucket" "mlflow_artifacts" {
   bucket = var.bucket_name
+ 
+  lifecycle {
+    prevent_destroy = true
+  }
 
   tags = {
     Name      = var.bucket_name
@@ -25,6 +29,8 @@ resource "aws_s3_bucket_versioning" "mlflow_artifacts" {
   versioning_configuration {
     status = "Enabled"
   }
+
+  
 }
 
 # Encryption
