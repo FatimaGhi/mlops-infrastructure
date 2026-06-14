@@ -19,7 +19,7 @@ module "s3" {
 }
 module "ecr" {
   source       = "./modules/ECR"
-  repositories = ["model-serving", "mlflow"]
+  repositories = ["model-serving"]
 }
 module "eks_addons" {
   source           = "./modules/eks-addons"
@@ -28,4 +28,12 @@ module "eks_addons" {
   cluster_ca       = module.eks.cluster_ca
   oidc_provider    = module.eks.oidc_provider
   depends_on       = [module.eks]
+}
+
+module "rds" {
+  source = "./modules/RDS"
+
+  vpc_id             = module.vpc.vpc_id
+  private_subnet_ids = values(module.vpc.private_subnets)
+  eks_node_sg_id     = module.eks.node_sg_id
 }

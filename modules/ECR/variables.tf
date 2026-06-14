@@ -1,5 +1,5 @@
 variable "repositories" {
   description = "List of ECR repositories"
   type        = list(string)
-  default     = ["model-serving", "mlflow"]
+  default     = ["model-serving"]
 }

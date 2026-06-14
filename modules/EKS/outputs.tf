@@ -12,3 +12,7 @@ output "cluster_ca" {
 output "oidc_provider" {
   value = module.eks_cluster.oidc_provider
 }
+
+output "node_sg_id" {
+  value = module.security_groups.node_sg_id
+}
