@@ -16,3 +16,7 @@ output "oidc_provider" {
 output "node_sg_id" {
   value = module.security_groups.node_sg_id
 }
+
+output "oidc_provider_arn" {
+  value = module.eks_cluster.oidc_provider_arn
+}
