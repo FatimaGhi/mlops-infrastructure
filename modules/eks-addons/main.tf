@@ -157,3 +157,39 @@ resource "kubernetes_service_account" "mlflow" {
   }
   depends_on = [helm_release.argocd]
 }
+
+resource "aws_iam_role" "model_serving" {
+  name = "model-serving-role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Principal = {
+        Federated = "arn:aws:iam::709598629349:oidc-provider/${var.oidc_provider}"
+      }
+      Action = "sts:AssumeRoleWithWebIdentity"
+      Condition = {
+        StringEquals = {
+          "${var.oidc_provider}:sub" = "system:serviceaccount:model-serving:model-serving"
+          "${var.oidc_provider}:aud" = "sts.amazonaws.com"
+        }
+      }
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "model_serving_s3" {
+  role       = aws_iam_role.model_serving.name
+  policy_arn = aws_iam_policy.mlflow_s3.arn # nfs policy (read S3)
+}
+
+resource "kubernetes_service_account" "model_serving" {
+  metadata {
+    name      = "model-serving"
+    namespace = "model-serving"
+    annotations = {
+      "eks.amazonaws.com/role-arn" = aws_iam_role.model_serving.arn
+    }
+  }
+  depends_on = [helm_release.argocd]
+}

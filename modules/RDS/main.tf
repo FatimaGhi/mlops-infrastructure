@@ -63,7 +63,12 @@ resource "aws_db_instance" "mlflow" {
   db_subnet_group_name   = aws_db_subnet_group.mlflow.name
   vpc_security_group_ids = [aws_security_group.rds.id]
 
-  skip_final_snapshot = true
+  lifecycle {
+    prevent_destroy = true
+  }
+  skip_final_snapshot       = false
+  final_snapshot_identifier = "mlflow-db-final-snapshot"
+
   publicly_accessible = false
 
   tags = {
