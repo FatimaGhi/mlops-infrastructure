@@ -193,3 +193,25 @@ resource "kubernetes_service_account" "model_serving" {
   }
   depends_on = [helm_release.argocd]
 }
+resource "kubernetes_config_map_v1_data" "aws_auth" {
+  metadata {
+    name      = "aws-auth"
+    namespace = "kube-system"
+  }
+  data = {
+    mapRoles = yamlencode([
+      {
+        rolearn  = "arn:aws:iam::709598629349:role/mlops-cluster-node-role"
+        username = "system:node:{{EC2PrivateDNSName}}"
+        groups   = ["system:bootstrappers", "system:nodes"]
+      },
+      {
+        rolearn  = "arn:aws:iam::709598629349:role/github-actions-mlops"
+        username = "github-actions"
+        groups   = ["system:masters"]
+      }
+    ])
+  }
+  force      = true
+  depends_on = [helm_release.argocd]
+}
