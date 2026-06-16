@@ -37,3 +37,9 @@ module "rds" {
   private_subnet_ids = values(module.vpc.private_subnets)
   eks_node_sg_id     = module.eks.node_sg_id
 }
+
+module "iam_github" {
+  source = "./modules/iam-github"
+
+  depends_on = [module.eks]
+}
