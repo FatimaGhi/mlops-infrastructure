@@ -15,6 +15,7 @@ resource "aws_security_group" "eks_cluster_sg" {
 
     cidr_blocks = ["0.0.0.0/0"]
   }
+  
 
   egress {
     from_port = 0
@@ -43,6 +44,23 @@ resource "aws_security_group" "node_sg" {
     protocol  = "tcp"
 
     self = true
+  }
+
+  # Allow API server to communicate with nodes on port 10250
+  ingress {
+    from_port       = 10250
+    to_port         = 10250
+    protocol        = "tcp"
+    security_groups = [aws_security_group.eks_cluster_sg.id]
+    description     = "API server to kubelet"
+  }
+  # Allow nodes to communicate with each other on all ports (required for Calico networking)
+  ingress {
+    from_port       = 0
+    to_port         = 65535
+    protocol        = "tcp"
+    security_groups = [aws_security_group.eks_cluster_sg.id]
+    description     = "Cluster SG to nodes"
   }
 
   egress {
