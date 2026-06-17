@@ -72,26 +72,26 @@ resource "aws_iam_role_policy" "github_actions" {
   })
 }
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━
-# EKS aws-auth — give kubectl access
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━
-resource "kubernetes_config_map_v1_data" "aws_auth" {
-  metadata {
-    name      = "aws-auth"
-    namespace = "kube-system"
-  }
+# # ━━━━━━━━━━━━━━━━━━━━━━━━━━
+# # EKS aws-auth — give kubectl access
+# # ━━━━━━━━━━━━━━━━━━━━━━━━━━
+# resource "kubernetes_config_map_v1_data" "aws_auth" {
+#   metadata {
+#     name      = "aws-auth"
+#     namespace = "kube-system"
+#   }
 
-  data = {
-    mapRoles = yamlencode([
-      {
-        rolearn  = "arn:aws:iam::709598629349:role/github-actions-mlops"
-        username = "github-actions"
-        groups   = ["system:masters"]
-      }
-    ])
-  }
+#   data = {
+#     mapRoles = yamlencode([
+#       {
+#         rolearn  = "arn:aws:iam::709598629349:role/github-actions-mlops"
+#         username = "github-actions"
+#         groups   = ["system:masters"]
+#       }
+#     ])
+#   }
 
-  force = true
+#   force = true
 
-  depends_on = [aws_iam_role.github_actions]
-}
+#   depends_on = [aws_iam_role.github_actions]
+# }
