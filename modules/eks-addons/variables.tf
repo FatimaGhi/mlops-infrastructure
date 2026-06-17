@@ -12,3 +12,7 @@ variable "oidc_provider" {
   description = "EKS OIDC provider URL"
 }
 variable "node_group_name" {}
+variable "slack_webhook_url" {
+  sensitive = true
+  default   = ""
+}

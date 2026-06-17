@@ -215,3 +215,14 @@ resource "kubernetes_config_map_v1_data" "aws_auth" {
   force      = true
   depends_on = [helm_release.argocd, var.node_group_name]
 }
+
+resource "kubernetes_secret" "alertmanager_slack" {
+  metadata {
+    name      = "alertmanager-slack-secret"
+    namespace = "monitoring"
+  }
+  data = {
+    slack-webhook-url = var.slack_webhook_url
+  }
+  depends_on = [helm_release.argocd]
+}

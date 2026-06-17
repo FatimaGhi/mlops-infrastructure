@@ -22,13 +22,14 @@ module "ecr" {
   repositories = ["model-serving"]
 }
 module "eks_addons" {
-  source           = "./modules/eks-addons"
-  cluster_name     = module.eks.cluster_name
-  cluster_endpoint = module.eks.cluster_endpoint
-  cluster_ca       = module.eks.cluster_ca
-  oidc_provider    = module.eks.oidc_provider
-  node_group_name  = module.eks.node_group_name
-  depends_on       = [module.eks]
+  source            = "./modules/eks-addons"
+  cluster_name      = module.eks.cluster_name
+  cluster_endpoint  = module.eks.cluster_endpoint
+  cluster_ca        = module.eks.cluster_ca
+  oidc_provider     = module.eks.oidc_provider
+  node_group_name   = module.eks.node_group_name
+  slack_webhook_url = var.slack_webhook_url
+  depends_on        = [module.eks]
 }
 
 module "rds" {

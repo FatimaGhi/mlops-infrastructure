@@ -14,5 +14,9 @@ variable "db_username" {
 
 variable "db_password" {
   sensitive = true
-  default   = "MlopsSecurePass2026!" # tbdl b stronger password
+  default   = "MlopsSecurePass2026!"
+}
+variable "slack_webhook_url" {
+  sensitive = true
+  default   = ""
 }
