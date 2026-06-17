@@ -11,3 +11,4 @@ variable "aws_account_id" {
 variable "oidc_provider" {
   description = "EKS OIDC provider URL"
 }
+variable "node_group_name" {}

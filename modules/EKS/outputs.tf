@@ -20,3 +20,6 @@ output "node_sg_id" {
 output "oidc_provider_arn" {
   value = module.eks_cluster.oidc_provider_arn
 }
+output "node_group_name" {
+  value = module.node_group.node_group_name
+}
