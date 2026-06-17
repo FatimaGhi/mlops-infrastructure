@@ -63,40 +63,40 @@ resource "helm_release" "argocd" {
 }
 
 # ARGOCD BOOTSTRAP (APP OF APPS)
-resource "helm_release" "argocd_bootstrap" {
-  name       = "argocd-apps"
-  repository = "https://argoproj.github.io/argo-helm"
-  chart      = "argocd-apps"
-  namespace  = "argocd"
-  version    = "1.4.1"
 
-  values = [
-    yamlencode({
-      applications = [{
-        name      = "app-of-apps"
+# delete resource "helm_release" "argocd_bootstrap" { ... }
+
+resource "kubernetes_manifest" "app_of_apps" {
+  manifest = {
+    apiVersion = "argoproj.io/v1alpha1"
+    kind       = "Application"
+    metadata = {
+      name      = "app-of-apps"
+      namespace = "argocd"
+    }
+    spec = {
+      project = "default"
+      source = {
+        repoURL        = "https://github.com/FatimaGhi/mlops-gitops"
+        targetRevision = "main"
+        path           = "apps"
+      }
+      destination = {
+        server    = "https://kubernetes.default.svc"
         namespace = "argocd"
-        project   = "default"
-        source = {
-          repoURL        = "https://github.com/FatimaGhi/mlops-gitops"
-          targetRevision = "main"
-          path           = "bootstrap"
+      }
+      syncPolicy = {
+        automated = {
+          prune    = false
+          selfHeal = true
         }
-        destination = {
-          server    = "https://kubernetes.default.svc"
-          namespace = "argocd"
-        }
-        syncPolicy = {
-          automated = {
-            prune    = true
-            selfHeal = true
-          }
-        }
-      }]
-    })
-  ]
-
+        syncOptions = ["CreateNamespace=true"]
+      }
+    }
+  }
   depends_on = [helm_release.argocd]
 }
+
 
 
 # IAM Role — MLflow ServiceAccount
