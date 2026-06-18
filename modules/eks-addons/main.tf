@@ -227,3 +227,19 @@ resource "kubernetes_secret" "alertmanager_slack" {
   }
   depends_on = [helm_release.argocd]
 }
+
+resource "helm_release" "metrics_server" {
+  name       = "metrics-server"
+  repository = "https://kubernetes-sigs.github.io/metrics-server/"
+  chart      = "metrics-server"
+  namespace  = "kube-system"
+  version    = "3.11.0"
+
+  values = [
+    yamlencode({
+      args = ["--kubelet-insecure-tls"]
+    })
+  ]
+
+  depends_on = [helm_release.argocd]
+}
