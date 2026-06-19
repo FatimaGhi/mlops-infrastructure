@@ -28,6 +28,7 @@ module "eks_addons" {
   cluster_ca        = module.eks.cluster_ca
   oidc_provider     = module.eks.oidc_provider
   node_group_name   = module.eks.node_group_name
+  github_token      = var.github_token
   slack_webhook_url = var.slack_webhook_url
   depends_on        = [module.eks]
 }

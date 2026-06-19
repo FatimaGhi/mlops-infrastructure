@@ -243,3 +243,13 @@ resource "helm_release" "metrics_server" {
 
   depends_on = [helm_release.argocd]
 }
+resource "kubernetes_secret" "github_token" {
+  metadata {
+    name      = "github-token"
+    namespace = "model-serving"
+  }
+  data = {
+    token = var.github_token
+  }
+  depends_on = [helm_release.argocd]
+}

@@ -16,3 +16,6 @@ variable "slack_webhook_url" {
   sensitive = true
   default   = ""
 }
+variable "github_token" {
+  sensitive = true
+}
