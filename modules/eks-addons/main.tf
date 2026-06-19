@@ -253,3 +253,13 @@ resource "kubernetes_secret" "github_token" {
   }
   depends_on = [helm_release.argocd]
 }
+resource "kubernetes_secret" "slack_webhook_model_serving" {
+  metadata {
+    name      = "alertmanager-slack-secret"
+    namespace = "model-serving"
+  }
+  data = {
+    slack-webhook-url = var.slack_webhook_url
+  }
+  depends_on = [helm_release.argocd]
+}
