@@ -46,6 +46,13 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
+      - name: Security scan (Checkov)
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: .
+          framework: terraform
+          soft_fail: true
+
       - name: Terraform Plan
         run: terraform plan -no-color -var="slack_webhook_url=${{ secrets.SLACK_WEBHOOK_URL }}" -var="github_token=${{ secrets.GITHUB_TOKEN_DRIFT }}"
 
