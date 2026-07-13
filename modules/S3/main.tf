@@ -2,7 +2,7 @@ resource "aws_s3_bucket" "mlflow_artifacts" {
   bucket = var.bucket_name
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 
   tags = {

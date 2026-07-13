@@ -64,7 +64,7 @@ resource "aws_db_instance" "mlflow" {
   vpc_security_group_ids = [aws_security_group.rds.id]
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
   skip_final_snapshot       = false
   final_snapshot_identifier = "mlflow-db-final-snapshot"
